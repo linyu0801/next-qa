@@ -1,12 +1,13 @@
 {
-  "name": "my-app",
+  "name": "next-qa",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@next-auth/prisma-adapter": "^1.0.7",
@@ -36,6 +37,9 @@
     "typescript": "5.2.2"
   },
   "devDependencies": {
+    "eslint-config-airbnb": "^19.0.4",
+    "husky": "^8.0.0",
+    "lint-staged": "^14.0.1",
     "prisma": "^5.2.0"
   }
 }
