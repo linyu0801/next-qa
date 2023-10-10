@@ -1,10 +1,13 @@
 import { cn } from '@/lib/utils';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import Providers from '@/components/Providers';
 import Navbar from '@/components/Navbar';
 import './globals.css';
 
+import dynamic from 'next/dynamic';
+const Providers = dynamic(() => import('@/components/Providers'), {
+  ssr: false,
+});
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
@@ -19,10 +22,12 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={cn(inter.className, 'antialiased min-h-screen ')}>
-        <Navbar />
-        {/* <Providers>{children}</Providers> */}
-        {children}
+      <body className={cn(inter.className, 'antialiased min-h-screen pt-16')}>
+        <Providers>
+          <Navbar />
+          {children}
+        </Providers>
+        {/* {children} */}
       </body>
     </html>
   );
