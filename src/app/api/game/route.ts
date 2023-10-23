@@ -4,7 +4,7 @@ import { quizCreationSchema } from '@/schemas/form/quiz';
 import { NextResponse } from 'next/server';
 import { ZodError } from 'zod';
 import axios from 'axios';
-export const Post = async (req: Request, res: Response) => {
+export async function POST(req: Request, res: Response) {
   try {
     const session = await getAuthSession();
     if (!session?.user) {
@@ -17,6 +17,7 @@ export const Post = async (req: Request, res: Response) => {
     }
     const body = await req.json();
     const { topic, type, amount } = quizCreationSchema.parse(body);
+
     const game = await prisma.game.create({
       data: {
         gameType: type,
@@ -25,6 +26,7 @@ export const Post = async (req: Request, res: Response) => {
         topic,
       },
     });
+
     const { data } = await axios.post(`${process.env.API_URL}/api/questions`, {
       topic,
       type,
@@ -81,6 +83,8 @@ export const Post = async (req: Request, res: Response) => {
     if (error instanceof ZodError) {
       return NextResponse.json({ error: error }, { status: 400 });
     }
+    console.log(error);
+
     return NextResponse.json({ error: '發生錯誤' }, { status: 500 });
   }
-};
+}

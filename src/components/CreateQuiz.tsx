@@ -1,17 +1,12 @@
 'use client';
-import React from 'react';
+import { Button } from '@/components/ui/button';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from './ui/card';
-import { useForm } from 'react-hook-form';
-import { quizCreationSchema } from '@/schemas/form/quiz';
-import { z } from 'zod';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { Button } from '@/components/ui/button';
+} from '@/components/ui/card';
 import {
   Form,
   FormControl,
@@ -22,14 +17,33 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
+import { Separator } from '@/components/ui/separator';
+import { quizCreationSchema } from '@/schemas/form/quiz';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useMutation } from '@tanstack/react-query';
+import axios from 'axios';
 import { BookOpen, CopyCheck } from 'lucide-react';
-import { Separator } from './ui/separator';
+import { useRouter } from 'next/navigation';
+import { useForm } from 'react-hook-form';
+import { z } from 'zod';
 
 type Props = {};
 
 type Input = z.infer<typeof quizCreationSchema>;
 
 export const CreateQuiz = (props: Props) => {
+  const router = useRouter();
+  const { mutate, isLoading } = useMutation({
+    mutationFn: async ({ amount, type, topic }: Input) => {
+      const response = await axios.post('api/game', {
+        amount,
+        type,
+        topic,
+      });
+      return response.data;
+    },
+  });
+
   const form = useForm<Input>({
     resolver: zodResolver(quizCreationSchema),
     defaultValues: {
@@ -40,6 +54,23 @@ export const CreateQuiz = (props: Props) => {
   });
   const onSubmit = (data: Input) => {
     console.log(JSON.stringify(data, null, 2));
+    mutate(
+      {
+        amount: data.amount,
+        type: data.type,
+        topic: data.topic,
+      },
+      {
+        onSuccess: ({ gameId }) => {
+          const type = form.getValues('type');
+          if (type === 'mcq') {
+            router.push(`/play/mcq/${gameId}`);
+          } else if (type === 'open_ended') {
+            router.push(`/play/open-ended/${gameId}`);
+          }
+        },
+      }
+    );
   };
 
   form.watch();
@@ -116,7 +147,9 @@ export const CreateQuiz = (props: Props) => {
                   申論題
                 </Button>
               </div>
-              <Button type="submit">提交</Button>
+              <Button disabled={isLoading} type="submit">
+                提交
+              </Button>
             </form>
           </Form>
         </CardContent>
