@@ -5,6 +5,7 @@ import Navbar from '@/components/Navbar';
 import './globals.css';
 
 import dynamic from 'next/dynamic';
+import { Toaster } from '@/components/ui/toaster';
 const Providers = dynamic(() => import('@/components/Providers'), {
   ssr: false,
 });
@@ -26,8 +27,8 @@ export default function RootLayout({
         <Providers>
           <Navbar />
           {children}
+          <Toaster />
         </Providers>
-        {/* {children} */}
       </body>
     </html>
   );

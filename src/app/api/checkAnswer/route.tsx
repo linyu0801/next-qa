@@ -7,8 +7,6 @@ import { ZodError, z } from 'zod';
 export async function POST(req: Request, res: Response) {
   try {
     const body = await req.json();
-    console.log(body);
-
     const { questionId, userAnswer } = checkAnswerSchema.parse(body);
     const question = await prisma.question.findUnique({
       where: {

@@ -11,6 +11,7 @@ import { getAuthSession } from '@/lib/nextauth';
 import { redirect } from 'next/navigation';
 // import HistoryComponent from '../HistoryComponent';
 import { prisma } from '@/lib/db';
+import HistoryComponent from '@/app/(pages)/history/History';
 
 type Props = {};
 
@@ -19,23 +20,21 @@ const RecentActivityCard = async (props: Props) => {
   if (!session?.user) {
     return redirect('/');
   }
-  //   const games_count = await prisma.game.count({
-  //     where: {
-  //       userId: session.user.id,
-  //     },
-  //   });
+  const games_count = await prisma.game.count({
+    where: {
+      userId: session.user.id,
+    },
+  });
   return (
     <Card className="col-span-4 lg:col-span-3">
       <CardHeader>
         <CardTitle className="text-2xl font-bold">
-          <Link href="/history">Recent Activity</Link>
+          <Link href="/history">近期活動</Link>
         </CardTitle>
-        <CardDescription>
-          {/* You have played a total of {games_count} quizzes. */}
-        </CardDescription>
+        <CardDescription>你總共測驗了 {games_count} 個項目 .</CardDescription>
       </CardHeader>
       <CardContent className="max-h-[580px] overflow-scroll">
-        {/* <HistoryComponent limit={10} userId={session.user.id} /> */}
+        <HistoryComponent limit={10} userId={session.user.id} />
       </CardContent>
     </Card>
   );

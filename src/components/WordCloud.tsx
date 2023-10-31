@@ -16,20 +16,18 @@ const WordCloud = ({ formattedTopics }: Props) => {
   const theme = useTheme();
   const router = useRouter();
   return (
-    <>
-      <D3WordCloud
-        data={formattedTopics}
-        height={550}
-        font="Times"
-        fontSize={fontSizeMapper}
-        rotate={0}
-        padding={10}
-        fill={theme.theme === 'dark' ? 'white' : 'black'}
-        onWordClick={(e, d) => {
-          router.push('/quiz?topic=' + d.text);
-        }}
-      />
-    </>
+    <D3WordCloud
+      data={formattedTopics}
+      height={550}
+      font="Times"
+      fontSize={fontSizeMapper}
+      rotate={0}
+      padding={10}
+      fill={theme.theme === 'dark' ? 'white' : 'black'}
+      onWordClick={(e, d) => {
+        router.push('/quiz?topic=' + d.text);
+      }}
+    />
   );
 };
 

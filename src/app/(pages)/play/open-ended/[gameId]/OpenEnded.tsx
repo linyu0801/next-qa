@@ -2,7 +2,7 @@
 import { Button, buttonVariants } from '@/components/ui/button';
 import { Game, Question } from '@prisma/client';
 import { BarChart, ChevronRight, Loader2, Timer } from 'lucide-react';
-import { useState, useMemo, useCallback, useEffect } from 'react';
+import { useState, useMemo, useCallback, useEffect, useRef } from 'react';
 import {
   Card,
   CardDescription,
@@ -12,44 +12,40 @@ import {
 import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import { z } from 'zod';
-import Link from 'next/link';
-import Counter from './Counter';
 import { checkAnswerSchema } from '@/schemas/form/quiz';
 import { useToast } from '@/components/ui/use-toast';
 import { cn, formatTimeDelta } from '@/lib/utils';
 import { differenceInSeconds } from 'date-fns';
+import AnswerInput from './AnswerInput';
+import Link from 'next/link';
 
 type Props = {
-  game: Game & { questions: Pick<Question, 'id' | 'options' | 'question'>[] };
+  game: Game & { questions: Pick<Question, 'id' | 'answer' | 'question'>[] };
 };
 
-const MCQ = ({ game }: Props) => {
-  const { toast } = useToast();
+const OpenEnded = ({ game }: Props) => {
   const [questionIndex, setQuestionIndex] = useState(0);
+  const [blankAnswer, setBlankAnswer] = useState<string>('');
   const [hasEnded, setHasEnded] = useState(false);
-  const [stats, setStats] = useState<{ correct: number; wrong: number }>({
-    correct: 0,
-    wrong: 0,
-  });
-  const [selectedChoice, setSelectedChoice] = useState<number>(0);
   const [now, setNow] = useState(new Date());
-
+  const { toast } = useToast();
+  const inputRef = useRef<HTMLInputElement[]>([]);
   const currentQuestion = useMemo(() => {
     return game.questions[questionIndex];
   }, [questionIndex, game.questions]);
 
-  const options = useMemo(() => {
-    if (!currentQuestion?.options) return [];
-    return JSON.parse(currentQuestion.options as string) as string[];
-  }, [currentQuestion]);
-
   const { mutate: checkAnswer, isLoading: isChecking } = useMutation({
     mutationFn: async () => {
+      let filledAnswer = blankAnswer;
+      inputRef.current.forEach((input) => {
+        filledAnswer = filledAnswer.replace('_____', input.value);
+        input.value = '';
+      });
       const payload: z.infer<typeof checkAnswerSchema> = {
         questionId: currentQuestion.id,
-        userAnswer: options[selectedChoice],
+        userAnswer: blankAnswer,
       };
-      const response = await axios.post('/api/checkAnswer', payload);
+      const response = await axios.post(`/api/checkAnswer`, payload);
       return response.data;
     },
   });
@@ -67,22 +63,12 @@ const MCQ = ({ game }: Props) => {
   const handleNext = useCallback(() => {
     if (isChecking) return;
     checkAnswer(undefined, {
-      onSuccess: ({ isCorrect }) => {
-        if (isCorrect) {
-          setStats((stats) => ({ ...stats, correct: stats.correct + 1 }));
-          toast({
-            title: 'Correct',
-            description: 'You got it right!',
-            variant: 'success',
-          });
-        } else {
-          setStats((stats) => ({ ...stats, wrong: stats.wrong + 1 }));
-          toast({
-            title: 'Incorrect',
-            description: 'You got it wrong!',
-            variant: 'destructive',
-          });
-        }
+      onSuccess: ({ percentageSimilar }) => {
+        console.log(123);
+
+        toast({
+          title: `您的答案與正確答案有 ${percentageSimilar} %相似`,
+        });
         if (questionIndex === game.questions.length - 1) {
           endGame();
           setHasEnded(true);
@@ -111,8 +97,8 @@ const MCQ = ({ game }: Props) => {
 
   if (hasEnded) {
     return (
-      <div className="absolute flex flex-col justify-center -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
-        <div className="px-4 py-2 mt-2 font-semibold text-white bg-green-500 rounded-md whitespace-nowrap">
+      <div className="absolute flex flex-col text-white justify-center -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2">
+        <div className="px-4 py-2 mt-2 font-semibold  bg-green-500 rounded-md whitespace-nowrap">
           You Completed in{' '}
           {formatTimeDelta(differenceInSeconds(now, game.timeStarted))}
         </div>
@@ -126,7 +112,6 @@ const MCQ = ({ game }: Props) => {
       </div>
     );
   }
-
   return (
     <div className="absolute -translate-x-1/2 -translate-y-1/2 md:w-[80vw] max-w-4xl w-[90vw] top-1/2 left-1/2">
       <div className="flex flex-row justify-between">
@@ -143,7 +128,6 @@ const MCQ = ({ game }: Props) => {
             {formatTimeDelta(differenceInSeconds(now, game.timeStarted))}
           </div>
         </div>
-        <Counter correct={stats.correct} wrong={stats.wrong} />
       </div>
       <Card className="w-full mt-4">
         <CardHeader className="flex flex-row items-center">
@@ -159,25 +143,19 @@ const MCQ = ({ game }: Props) => {
         </CardHeader>
       </Card>
       <div className="flex flex-col items-center justify-center w-full mt-4">
-        {options.map((option, index) => (
-          <Button
-            key={option}
-            variant={selectedChoice === index ? 'default' : 'outline'}
-            className="justify-start w-full py-8 mb-4"
-            onClick={() => setSelectedChoice(index)}
-          >
-            <div className="flex items-center justify-start">
-              <div className="p-2 px-3 mr-5 border rounded-md">{index + 1}</div>
-              <div className="text-start">{option}</div>
-            </div>
-          </Button>
-        ))}
+        <AnswerInput
+          ref={inputRef}
+          answer={currentQuestion.answer}
+          setBlankAnswer={setBlankAnswer}
+        />
+
         <Button
-          variant="default"
-          className="mt-2"
-          size="lg"
+          variant="outline"
+          className="mt-4"
           disabled={isChecking || hasEnded}
-          onClick={() => handleNext()}
+          onClick={() => {
+            handleNext();
+          }}
         >
           {isChecking && <Loader2 className="w-4 h-4 mr-2 animate-spin" />}
           下一題 <ChevronRight className="w-4 h-4 ml-2" />
@@ -187,4 +165,4 @@ const MCQ = ({ game }: Props) => {
   );
 };
 
-export default MCQ;
+export default OpenEnded;
