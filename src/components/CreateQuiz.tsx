@@ -24,15 +24,19 @@ import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import { BookOpen, CopyCheck } from 'lucide-react';
 import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
+import Loading from './Loading';
 
-type Props = {};
+type Props = { topicParams: string };
 
 type Input = z.infer<typeof quizCreationSchema>;
 
-export const CreateQuiz = (props: Props) => {
+export const CreateQuiz = ({ topicParams }: Props) => {
   const router = useRouter();
+  const [showLoader, setShowLoader] = useState(false);
+  const [isFinished, setIsFinished] = useState(false);
   const { mutate, isLoading } = useMutation({
     mutationFn: async ({ amount, type, topic }: Input) => {
       const response = await axios.post('api/game', {
@@ -48,12 +52,12 @@ export const CreateQuiz = (props: Props) => {
     resolver: zodResolver(quizCreationSchema),
     defaultValues: {
       amount: 3,
-      topic: '',
+      topic: topicParams,
       type: 'open_ended',
     },
   });
   const onSubmit = (data: Input) => {
-    console.log(JSON.stringify(data, null, 2));
+    setShowLoader(true);
     mutate(
       {
         amount: data.amount,
@@ -62,18 +66,27 @@ export const CreateQuiz = (props: Props) => {
       },
       {
         onSuccess: ({ gameId }) => {
-          const type = form.getValues('type');
-          if (type === 'mcq') {
-            router.push(`/play/mcq/${gameId}`);
-          } else if (type === 'open_ended') {
-            router.push(`/play/open-ended/${gameId}`);
-          }
+          setIsFinished(true);
+          const timer = setTimeout(() => {
+            const type = form.getValues('type');
+            if (type === 'mcq') {
+              router.push(`/play/mcq/${gameId}`);
+            } else if (type === 'open_ended') {
+              router.push(`/play/open-ended/${gameId}`);
+            }
+            clearTimeout(timer);
+          }, 1000);
         },
+        onError: () => setShowLoader(false),
       }
     );
   };
 
   form.watch();
+
+  if (showLoader) {
+    return <Loading finished={isFinished} />;
+  }
 
   return (
     <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
