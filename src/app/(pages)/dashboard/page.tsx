@@ -4,14 +4,15 @@ import HotTopicsCard from '@/components/dashboard/HotTopicsCard';
 import QuizMeCard from '@/components/dashboard/QuizCard';
 import RecentActivityCard from '@/components/dashboard/RecentActivityCard';
 import { getAuthSession } from '@/lib/nextauth';
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 import { redirect } from 'next/navigation';
 import React from 'react';
 
 type Props = {};
 
-export const metaData: Metadata = {
+export const metadata: Metadata = {
   title: 'Dashboard | Quizmify',
+  description: 'Quiz yourself on anything!',
 };
 
 const Dashboard = async (props: Props) => {

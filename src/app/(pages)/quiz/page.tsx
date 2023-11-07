@@ -1,13 +1,14 @@
 import { CreateQuiz } from '@/components/CreateQuiz';
 import { getAuthSession } from '@/lib/nextauth';
 import { redirect } from 'next/navigation';
-import { Metadata } from 'next';
+import type { Metadata } from 'next';
 
 type Props = {
   searchParams: { topic?: string };
 };
 export const metadata: Metadata = {
   title: 'Quiz | Quizmify',
+  description: 'Quiz yourself on anything!',
 };
 const QuizPage = async ({ searchParams }: Props) => {
   const session = await getAuthSession();
