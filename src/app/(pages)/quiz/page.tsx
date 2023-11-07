@@ -1,12 +1,12 @@
 import { CreateQuiz } from '@/components/CreateQuiz';
 import { getAuthSession } from '@/lib/nextauth';
 import { redirect } from 'next/navigation';
-import React from 'react';
+import { Metadata } from 'next';
 
 type Props = {
   searchParams: { topic?: string };
 };
-export const metadata = {
+export const metadata: Metadata = {
   title: 'Quiz | Quizmify',
 };
 const QuizPage = async ({ searchParams }: Props) => {
