@@ -17,7 +17,7 @@ const Loading = ({ finished }: Props) => {
   const [loadingText, setLoadingText] = useState(loadingTexts[0]);
   useEffect(() => {
     const interval = setInterval(() => {
-      let randomIndex = Math.floor(Math.random() * loadingTexts.length);
+      const randomIndex = Math.floor(Math.random() * loadingTexts.length);
       setLoadingText(loadingTexts[randomIndex]);
     }, 2000);
     return () => clearInterval(interval);
