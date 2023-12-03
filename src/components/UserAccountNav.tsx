@@ -1,6 +1,9 @@
 'use client';
+import { LogOut } from 'lucide-react';
 import { User } from 'next-auth';
-import React from 'react';
+import { signOut } from 'next-auth/react';
+import Link from 'next/link';
+import UserAvatar from './UserAvatar';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,11 +11,6 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from './ui/dropdown-menu';
-import Link from 'next/link';
-import { signOut } from 'next-auth/react';
-import { Button } from './ui/button';
-import { LogOut } from 'lucide-react';
-import UserAvatar from './UserAvatar';
 
 type Props = {
   user: Pick<User, 'name' | 'email' | 'image'>;
@@ -20,11 +18,11 @@ type Props = {
 
 const UserAccountNav = ({ user }: Props) => {
   return (
-    <DropdownMenu>
+    <DropdownMenu >
       <DropdownMenuTrigger>
         <UserAvatar user={user} />
       </DropdownMenuTrigger>
-      <DropdownMenuContent className="bg-whtie" align="end">
+      <DropdownMenuContent align="end">
         <div className="flex items-center justify-start gap-2 p-2">
           <div className="flex flex-col space-y-1 leading-none">
             {user.name && <p className="font-medium">{user.name}</p>}

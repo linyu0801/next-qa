@@ -1,8 +1,8 @@
-import { prisma } from '@/lib/db';
-import { checkAnswerSchema } from '@/schemas/form/quiz';
-import { NextResponse } from 'next/server';
-import { compareTwoStrings } from 'string-similarity';
-import { ZodError, z } from 'zod';
+import { prisma } from "@/lib/db";
+import { checkAnswerSchema } from "@/schemas/form/quiz";
+import { NextResponse } from "next/server";
+import { compareTwoStrings } from "string-similarity";
+import { ZodError, z } from "zod";
 
 export async function POST(req: Request, res: Response) {
   try {
@@ -14,7 +14,7 @@ export async function POST(req: Request, res: Response) {
       },
     });
     if (!question) {
-      return NextResponse.json({ message: '查無此問題' }, { status: 404 });
+      return NextResponse.json({ message: "查無此問題" }, { status: 404 });
     }
     await prisma.question.update({
       where: { id: questionId },
@@ -22,7 +22,7 @@ export async function POST(req: Request, res: Response) {
         userAnswer: userAnswer,
       },
     });
-    if (question.questionType === 'mcq') {
+    if (question.questionType === "mcq") {
       const isCorrect =
         question.answer.toLowerCase().trim() ===
         userAnswer.toLowerCase().trim();
@@ -31,7 +31,7 @@ export async function POST(req: Request, res: Response) {
         data: { isCorrect },
       });
       return NextResponse.json({ isCorrect }, { status: 200 });
-    } else if (question.questionType === 'open_ended') {
+    } else if (question.questionType === "open_ended") {
       let percentageSimilar = compareTwoStrings(
         question.answer.toLowerCase().trim(),
         userAnswer.toLowerCase().trim()

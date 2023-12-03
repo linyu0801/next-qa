@@ -7,7 +7,9 @@
     "build": "npx prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
-    "prepare": "husky install"
+    "prepare": "husky install",
+    "format": "prettier --check --ignore-path .gitignore .",
+    "format:fix": "prettier --write --ignore-path .gitignore ."
   },
   "dependencies": {
     "@hookform/resolvers": "^3.3.1",
@@ -55,9 +57,11 @@
   "devDependencies": {
     "@types/string-similarity": "^4.0.1",
     "encoding": "^0.1.13",
-    "eslint-config-airbnb": "^19.0.4",
+    "eslint-config-prettier": "^9.1.0",
     "husky": "^8.0.0",
     "lint-staged": "^14.0.1",
+    "prettier": "3.1.0",
+    "prettier-plugin-tailwindcss": "^0.5.7",
     "prisma": "^5.4.2"
   }
 }

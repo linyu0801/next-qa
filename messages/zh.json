@@ -1,0 +1,32 @@
+{
+  "Login": {
+    "title": "歡迎!",
+    "description": "請登錄您的帳號以繼續",
+    "loginButton": "透過 Google 登入"
+  },
+  "Dashboard": {
+    "title": "儀表板",
+    "introButton": "說明",
+    "intro": {
+      "title": "歡迎!",
+      "description": "您是否厭倦了平凡且重複的測驗？ 我們的平台正在利用人工智慧的巨大潛力，徹底改變測驗和問答體驗。",
+      "content": "建構於"
+    }
+  },
+  "HotTopics": {
+    "title": "熱門主題",
+    "description": "點擊一個主題，開始測驗。"
+  },
+  "HistoryCard": {
+    "title": "歷史紀錄",
+    "description": "查看過去的測驗。"
+  },
+  "QuizMeCard": {
+    "title": "測驗!",
+    "description": "挑戰自己，參加一個您選擇的主題的測驗。"
+  },
+  "RecentActivityCard": {
+    "title": "近期活動",
+    "description": "你總共測驗了 {count} 個項目 ."
+  }
+}

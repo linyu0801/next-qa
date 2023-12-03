@@ -39,7 +39,7 @@ export const CreateQuiz = ({ topicParams }: Props) => {
   const [isFinished, setIsFinished] = useState(false);
   const { mutate, isLoading } = useMutation({
     mutationFn: async ({ amount, type, topic }: Input) => {
-      const response = await axios.post('api/game', {
+      const response = await axios.post('/api/game', {
         amount,
         type,
         topic,
@@ -89,23 +89,23 @@ export const CreateQuiz = ({ topicParams }: Props) => {
   }
 
   return (
-    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-      <Card>
+    <div className='absolute left-1/2 top-1/2 w-full -translate-x-1/2 -translate-y-1/2 px-4'>
+      <Card className='mx-auto w-full max-w-[320px] sm:max-w-[400px]'>
         <CardHeader>
-          <CardTitle className="text-2xl font-bold">建立一個測驗</CardTitle>
+          <CardTitle className='text-2xl font-bold'>建立一個測驗</CardTitle>
           <CardDescription>選擇一個主題</CardDescription>
         </CardHeader>
         <CardContent>
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+            <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
               <FormField
                 control={form.control}
-                name="topic"
+                name='topic'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>主題</FormLabel>
                     <FormControl>
-                      <Input placeholder="輸入一個主題" {...field} />
+                      <Input placeholder='輸入一個主題' {...field} />
                     </FormControl>
                     <FormDescription>請填寫一個主題</FormDescription>
                     <FormMessage />
@@ -114,17 +114,17 @@ export const CreateQuiz = ({ topicParams }: Props) => {
               />
               <FormField
                 control={form.control}
-                name="amount"
+                name='amount'
                 render={({ field }) => (
                   <FormItem>
                     <FormLabel>測驗總數</FormLabel>
                     <FormControl>
                       <Input
-                        placeholder="輸入總數"
+                        placeholder='輸入總數'
                         {...field}
                         min={1}
                         max={10}
-                        type="number"
+                        type='number'
                         onChange={(e) =>
                           form.setValue('amount', parseInt(e.target.value))
                         }
@@ -134,33 +134,33 @@ export const CreateQuiz = ({ topicParams }: Props) => {
                   </FormItem>
                 )}
               />
-              <div className="flex justify-between">
+              <div className='flex justify-between'>
                 <Button
-                  type="button"
+                  type='button'
                   variant={
                     form.getValues('type') === 'mcq' ? 'default' : 'secondary'
                   }
-                  className="w-1/2 rounded-none rounded-l-lg"
+                  className='w-1/2 rounded-none rounded-l-lg'
                   onClick={() => form.setValue('type', 'mcq')}
                 >
-                  <CopyCheck className="w-4 h-4 mr-2" /> 多選題
+                  <CopyCheck className='mr-2 h-4 w-4' /> 多選題
                 </Button>
-                <Separator orientation="vertical" />
+                <Separator orientation='vertical' />
                 <Button
-                  type="button"
+                  type='button'
                   variant={
                     form.getValues('type') === 'open_ended'
                       ? 'default'
                       : 'secondary'
                   }
-                  className="w-1/2 rounded-none rounded-r-lg"
+                  className='w-1/2 rounded-none rounded-r-lg'
                   onClick={() => form.setValue('type', 'open_ended')}
                 >
-                  <BookOpen className="w-4 h-4 mr-2" />
+                  <BookOpen className='mr-2 h-4 w-4' />
                   申論題
                 </Button>
               </div>
-              <Button disabled={isLoading} type="submit">
+              <Button disabled={isLoading} type='submit'>
                 提交
               </Button>
             </form>

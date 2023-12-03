@@ -1,0 +1,32 @@
+{
+  "Login": {
+    "title": "Welcome!",
+    "description": "Please log in to your account to continue",
+    "loginButton": "Login with Google"
+  },
+  "Dashboard": {
+    "title": "Dashboard",
+    "introButton": "What is this",
+    "intro": {
+      "title": "Welcome!",
+      "description": "Are you tired of mundane and repetitive quizzes? Our platform is revolutionizing the quiz and trivia experience by harnessing the immense potential of artificial intelligence.",
+      "content": "Built with"
+    }
+  },
+  "HotTopics": {
+    "title": "Hot Topics",
+    "description": "Click on a topic to start a quiz on it."
+  },
+  "HistoryCard": {
+    "title": "History",
+    "description": "View past quiz attempts."
+  },
+  "QuizMeCard": {
+    "title": "Quiz me!",
+    "description": "Challenge yourself to a quiz with a topic of your choice."
+  },
+  "RecentActivityCard": {
+    "title": "Recent Activity",
+    "description": "You have played a total of {count} quizzes."
+  }
+}

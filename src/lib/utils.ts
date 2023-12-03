@@ -1,5 +1,5 @@
-import { type ClassValue, clsx } from 'clsx';
-import { twMerge } from 'tailwind-merge';
+import { type ClassValue, clsx } from "clsx";
+import { twMerge } from "tailwind-merge";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -19,5 +19,5 @@ export function formatTimeDelta(seconds: number) {
   if (secs > 0) {
     parts.push(`${secs}s`);
   }
-  return parts.join(' ');
+  return parts.join(" ");
 }
