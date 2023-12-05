@@ -1,5 +1,6 @@
-import { notFound } from "next/navigation";
-import NextIntlProvider from "./NextIntlProvider";
+import PageLoader from '@/components/PageLoader';
+import { Suspense } from 'react';
+import NextIntlProvider from './NextIntlProvider';
 
 type Props = {
   children: React.ReactNode;
@@ -17,13 +18,15 @@ export default async function LocaleLayout({
   }
 
   return (
-    <NextIntlProvider
-      locale={locale}
-      messages={messages}
-      timeZone="Asia/Taipei"
-      now={new Date()}
-    >
-      {children}
-    </NextIntlProvider>
+    <Suspense fallback={<PageLoader />}>
+      <NextIntlProvider
+        locale={locale}
+        messages={messages}
+        timeZone='Asia/Taipei'
+        now={new Date()}
+      >
+        {children}
+      </NextIntlProvider>
+    </Suspense>
   );
 }

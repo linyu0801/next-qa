@@ -1,5 +1,5 @@
-"use client";
-import React from "react";
+'use client';
+import React from 'react';
 
 import {
   Table,
@@ -9,26 +9,26 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@/components/ui/table";
-import { Question } from "@prisma/client";
+} from '@/components/ui/table';
+import { Question } from '@prisma/client';
 
 type Props = {
   questions: Question[];
 };
 
 const QuestionsList = ({ questions }: Props) => {
-  const gameType = questions[0].questionType;
+  const gameType = questions[0]?.questionType;
   return (
-    <Table className="mt-4">
+    <Table className='mt-4'>
       <TableCaption>End of list.</TableCaption>
       <TableHeader>
         <TableRow>
-          <TableHead className="w-[10px]">No.</TableHead>
+          <TableHead className='w-[10px]'>No.</TableHead>
           <TableHead>問題 & 正確答案</TableHead>
           <TableHead>你的答案</TableHead>
 
-          {gameType === "open_ended" && (
-            <TableHead className="w-[10px] text-right whitespace-nowrap">
+          {gameType === 'open_ended' && (
+            <TableHead className='w-[10px] whitespace-nowrap text-right'>
               準確度
             </TableHead>
           )}
@@ -37,21 +37,21 @@ const QuestionsList = ({ questions }: Props) => {
       <TableBody>
         {questions.map((question, index) => (
           <TableRow key={question.id}>
-            <TableCell className="font-medium">{index + 1}</TableCell>
+            <TableCell className='font-medium'>{index + 1}</TableCell>
             <TableCell>
               {question.question} <br />
               <br />
-              <span className="font-semibold">{question.answer}</span>
+              <span className='font-semibold'>{question.answer}</span>
             </TableCell>
-            {gameType === "open_ended" && (
-              <TableCell className="font-semibold">
+            {gameType === 'open_ended' && (
+              <TableCell className='font-semibold'>
                 {question.userAnswer}
               </TableCell>
             )}
-            {gameType === "mcq" && (
+            {gameType === 'mcq' && (
               <TableCell
                 className={`${
-                  question.isCorrect ? "text-green-600" : "text-red-600"
+                  question.isCorrect ? 'text-green-600' : 'text-red-600'
                 } font-semibold`}
               >
                 {question.userAnswer}
@@ -59,7 +59,7 @@ const QuestionsList = ({ questions }: Props) => {
             )}
 
             {!!question.percentageCorrect && (
-              <TableCell className="text-center">
+              <TableCell className='text-center'>
                 {question.percentageCorrect}
               </TableCell>
             )}
